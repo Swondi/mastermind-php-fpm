@@ -10,9 +10,9 @@ security:
         #         class: App\Entity\AuthUser
         #         property: email
         # used to reload user from session & other features (e.g. switch_user)
-        # role_hierarchy:
-        #     ROLE_USER_PREMIUM: [ ROLE_USER_PREMIUM, ROLE_USER ]
-        #     ROLE_ADMIN: [ ROLE_ADMIN, ROLE_USER_PREMIUM, ROLE_USER ]
+        role_hierarchy:
+            ROLE_ROOT: ROLE_ADMIN
+            ROLE_ADMIN: [ ROLE_USER ]
 
     firewalls:
         dev:
@@ -41,6 +41,13 @@ security:
 
       - { path: ^/api/, roles: ROLE_USER }
       - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\AuthUser
+                property: email
 
 when@test:
     security:
