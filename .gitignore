@@ -1,0 +1,19 @@
+# symfony/framework-bundle
+/.env.*
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/cache/
+/var/log/
+/vendor/
+
+# lexik/jwt-authentication-bundle
+/config/jwt/*.pem
+
+# Docker
+/pgdata
+
+# Upload dir
+/files/
+
+supervisord.log
+supervisord.pid

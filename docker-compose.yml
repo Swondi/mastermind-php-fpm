@@ -1,0 +1,42 @@
+name: control-panel
+
+services:
+  control-panel-php-fpm:
+    container_name: control-panel-php-fpm
+    build:
+      context: .
+      dockerfile: .docker/local/Dockerfile
+    volumes:
+      - ./:/var/www/myapp/
+    env_file:
+      - .env.local
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    depends_on:
+      - control-panel-postgres
+    networks:
+      control-panel:
+      nginx-proxy-manager_default:
+
+  control-panel-postgres:
+    container_name: control-panel-postgres
+    image: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    env_file:
+      - .env.local
+    restart: unless-stopped
+    ports:
+      - "5432"
+    networks:
+      control-panel:
+      jump-server:
+
+networks:
+  control-panel:
+    name: control-panel
+  nginx-proxy-manager_default:
+    external: true
+  jump-server:
+    external: true
