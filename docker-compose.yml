@@ -1,8 +1,8 @@
-name: control-panel
+name: mastermind
 
 services:
-  control-panel-php-fpm:
-    container_name: control-panel-php-fpm
+  mastermind-php-fpm:
+    container_name: mastermind-php-fpm
     build:
       context: .
       dockerfile: .docker/local/Dockerfile
@@ -14,13 +14,13 @@ services:
     ports:
       - "8081:80"
     depends_on:
-      - control-panel-postgres
+      - mastermind-postgres
     networks:
-      control-panel:
+      mastermind:
       nginx-proxy-manager_default:
 
-  control-panel-postgres:
-    container_name: control-panel-postgres
+  mastermind-postgres:
+    container_name: mastermind-postgres
     image: postgres
     volumes:
       - ./pgdata:/var/lib/postgresql/data
@@ -30,12 +30,12 @@ services:
     ports:
       - "5432"
     networks:
-      control-panel:
+      mastermind:
       jump-server:
 
 networks:
-  control-panel:
-    name: control-panel
+  mastermind:
+    name: mastermind
   nginx-proxy-manager_default:
     external: true
   jump-server:

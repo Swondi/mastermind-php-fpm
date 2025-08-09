@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\AuthUserRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -31,6 +32,17 @@ class AuthUser implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\Column]
+    private ?bool $isRoot = null;
+
+    public function __construct() {
+        $this->created_at = new DateTimeImmutable();
+        $this->isRoot = false;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -99,5 +111,29 @@ class AuthUser implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         // @deprecated, to be removed when upgrading to Symfony 8
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function isRoot(): ?bool
+    {
+        return $this->isRoot;
+    }
+
+    public function setIsRoot(bool $isRoot): static
+    {
+        $this->isRoot = $isRoot;
+
+        return $this;
     }
 }
