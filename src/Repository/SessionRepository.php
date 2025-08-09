@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\Session;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @extends ServiceEntityRepository<Session>
+ */
+class SessionRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Session::class);
+    }
+
+    public function findByToken(string $token) {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.refreshToken = :token')
+            ->setParameter('token', $token)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+}
