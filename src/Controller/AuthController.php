@@ -85,8 +85,8 @@ final class AuthController extends AbstractController
         /** @var Session $session */
         $session = $sessionRepository->findByToken($rt);
 
-        if (!$session || $session->getExpiresAt() < new \DateTimeImmutable()) {
-            return $this->json(['error' => 'Refresh token expired or invalid'], Response::HTTP_UNAUTHORIZED);
+        if (!$session) {
+            return $this->json(['error' => 'Invalid refresh token'], Response::HTTP_UNAUTHORIZED);
         }
 
         /** @var AuthUser $user */
@@ -99,18 +99,17 @@ final class AuthController extends AbstractController
         $user->addSession($newSession);
         $user->removeSession($session);
 
-        $em->remove($session);
         $em->persist($user);
         $em->flush();
 
         $newRtCookie = new Cookie(
             'rt', $newSession->getRefreshToken(), time() + 86400, '/',
-            null, true, true, false, 'lax'
+            null, false, true, false, 'lax'
         );
 
         $newAtCookie = new Cookie(
             'at', $jwtManager->create($user), time() + 900, '/',
-            null, true, true, false, 'lax'
+            null, false, true, false, 'lax'
         );
 
         $response = new JsonResponse(null, Response::HTTP_NO_CONTENT);
@@ -124,8 +123,32 @@ final class AuthController extends AbstractController
     public function login() { } // handled by the lexik jwt
 
     #[Route('/api/auth/logout', name: 'logout', methods: ['GET'])]
-    public function logout(): Response
+    public function logout(
+        Request $request,
+        SessionRepository $sessionRepository,
+        EntityManagerInterface $em
+    ): Response
     {
+        $rt = $request->cookies->get('rt');
+
+        if (!$rt) {
+            return $this->json(['error' => 'No refresh token provided'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        /** @var Session $session */
+        $session = $sessionRepository->findByToken($rt);
+
+        if (!$session) {
+            return $this->json(['error' => 'Invalid refresh token'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        /** @var AuthUser $user */
+        $user = $session->getAuthUser();
+        $user->removeSession($session);
+
+        $em->persist($user);
+        $em->flush();
+
         $response = new JsonResponse(null, Response::HTTP_NO_CONTENT);
         
         $response->headers->clearCookie('at', '/');

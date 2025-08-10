@@ -43,7 +43,7 @@ class AuthUser implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Session>
      */
-    #[ORM\OneToMany(targetEntity: Session::class, mappedBy: 'authUser', cascade: [ 'persist', 'remove' ])]
+    #[ORM\OneToMany(targetEntity: Session::class, mappedBy: 'authUser', cascade: [ 'persist', 'remove' ], orphanRemoval: true)]
     private Collection $sessions;
 
     public function __construct() {

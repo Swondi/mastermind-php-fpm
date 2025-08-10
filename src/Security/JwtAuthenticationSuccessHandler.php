@@ -67,11 +67,11 @@ class JwtAuthenticationSuccessHandler extends AuthenticationSuccessHandler
         // TODO: add dynamic values for secure & domain
         // name, value, expiration, path, domain, secure, httpOnly, raw, sameSite
         $atCookie = new Cookie(
-            'at', $jwtToken, time() + 3600, '/', null, true, true, false, 'lax'
+            'at', $jwtToken, time() + 3600, '/', null, false, true, false, 'lax'
         );
 
         $rtCookie = new Cookie(
-            'rt', $session->getRefreshToken(), time() + 86400, '/', null, true, true, false, 'lax'
+            'rt', $session->getRefreshToken(), time() + 86400, '/', null, false, true, false, 'lax'
         );
 
         $jsonResponse->headers->setCookie($atCookie);
