@@ -157,14 +157,9 @@ final class AuthController extends AbstractController
         return $response;
     }
 
-    #[Route('/api/get/data', name: 'test', methods: ['GET'])]
-    public function test(): Response
+    #[Route('/api/auth/me', name: 'me', methods: ['GET'])]
+    public function me(): Response
     {
-        /** @var AuthUser $user */
-        $user = $this->getUser();
-
-        return $this->json([
-            'user' => $user->getEmail(),
-        ]);
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 }
