@@ -121,4 +121,10 @@ class DataUser
 
         return $this;
     }
+
+    #[Groups([ 'data' ])]
+    public function getEmail(): string
+    {
+        return $this->getAuthUser()->getEmail();
+    }
 }

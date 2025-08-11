@@ -161,7 +161,8 @@ final class AuthController extends AbstractController
     public function me(): Response
     {
         $isAuthenticated = !!$this->getUser();
-        $isFirstTime = !file_exists('%kernel.project_dir/.firsttime%');
+        $projectDir = $this->getParameter('kernel.project_dir');
+        $isFirstTime = file_exists($projectDir.'/.firsttime');
 
         return new JsonResponse([
             'isAuthenticated' => $isAuthenticated,
