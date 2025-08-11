@@ -13,18 +13,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class JwtAuthenticationSuccessHandler extends AuthenticationSuccessHandler
 {
     private $em;
-    private UserProviderInterface $userProvider;
 
     public function __construct(
         JWTTokenManagerInterface $jwtManager,
         EventDispatcherInterface $dispatcher,
         EntityManagerInterface $em,
-        UserProviderInterface $userProvider,
         iterable $cookieProviders = [],
         bool $removeTokenFromBodyWhenCookiesUsed = true,
     )
@@ -37,14 +34,13 @@ class JwtAuthenticationSuccessHandler extends AuthenticationSuccessHandler
         );
 
         $this->em = $em;
-        $this->userProvider = $userProvider;
     }
 
     public function onAuthenticationSuccess(
         Request $request,
         TokenInterface $token,
     ): JsonResponse
-    {
+    {    
         /** @var AuthUser $user */
         $user = $token->getUser();
 

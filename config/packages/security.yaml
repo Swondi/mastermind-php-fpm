@@ -29,6 +29,8 @@ security:
             stateless: true
             jwt: ~
             entry_point: App\Security\AuthenticationEntryPoint
+            custom_authenticators:
+              - App\Security\JwtAuthenticator
 
     access_control:
       - { path: ^/api/auth/me, roles: IS_AUTHENTICATED_FULLY }
