@@ -35,7 +35,7 @@ class JwtAuthenticationSuccessHandler extends AuthenticationSuccessHandler
 
         $this->em = $em;
     }
-
+    
     public function onAuthenticationSuccess(
         Request $request,
         TokenInterface $token,

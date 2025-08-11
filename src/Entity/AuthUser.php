@@ -46,10 +46,15 @@ class AuthUser implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Session::class, mappedBy: 'authUser', cascade: [ 'persist', 'remove' ], orphanRemoval: true)]
     private Collection $sessions;
 
+    #[ORM\OneToOne(inversedBy: 'authUser', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?DataUser $dataUser = null;
+
     public function __construct() {
         $this->created_at = new DateTimeImmutable();
         $this->isRoot = false;
         $this->sessions = new ArrayCollection();
+        $this->dataUser = new DataUser();
     }
     
     public function getId(): ?int
@@ -172,6 +177,18 @@ class AuthUser implements UserInterface, PasswordAuthenticatedUserInterface
                 $session->setAuthUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDataUser(): ?DataUser
+    {
+        return $this->dataUser;
+    }
+
+    public function setDataUser(DataUser $dataUser): static
+    {
+        $this->dataUser = $dataUser;
 
         return $this;
     }

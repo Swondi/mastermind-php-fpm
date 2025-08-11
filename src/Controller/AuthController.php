@@ -160,6 +160,12 @@ final class AuthController extends AbstractController
     #[Route('/api/auth/me', name: 'me', methods: ['GET'])]
     public function me(): Response
     {
-        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+        $isAuthenticated = !!$this->getUser();
+        $isFirstTime = !file_exists('%kernel.project_dir/.firsttime%');
+
+        return new JsonResponse([
+            'isAuthenticated' => $isAuthenticated,
+            'isFirstTime' => $isFirstTime,
+        ]);
     }
 }
