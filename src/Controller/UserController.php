@@ -41,6 +41,7 @@ final class UserController extends AbstractController
     {
         /** @var AuthUser $user */
         $user = $this->getUser();
+        
         /** @var DataUser $dataUser */
         $dataUser = $user->getDataUser();
 

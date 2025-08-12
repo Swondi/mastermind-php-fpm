@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Entity;
-
+/**
+ * {"server_overload_alerts":{"email":true,"mobile":false},"node_offline_warnings":{"email":true,"mobile":true},"high_latency_alerts":{"email":true,"mobile":false},"security_breach_detected":{"email":true,"mobile":false}}
+ */
 use App\Config\NotificationPreferencesConfig;
 use App\Repository\DataUserRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -37,6 +39,10 @@ class DataUser
 
     #[ORM\OneToOne(mappedBy: 'dataUser', cascade: ['persist', 'remove'])]
     private ?AuthUser $authUser = null;
+
+    public function __construct() {
+        $this->notificationPreference = NotificationPreferencesConfig::ALL_PREFERENCES;
+    }
 
     public function getId(): ?int
     {
@@ -93,9 +99,7 @@ class DataUser
 
     public function getNotificationPreference(): array
     {
-        $defaults = NotificationPreferencesConfig::ALL_PREFERENCES;
-
-        return array_replace_recursive($defaults, $this->notificationPreference);
+        return $this->notificationPreference;
     }
 
     public function setNotificationPreference(array $notificationPreference): static
