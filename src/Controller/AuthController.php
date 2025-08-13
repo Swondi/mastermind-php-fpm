@@ -169,4 +169,23 @@ final class AuthController extends AbstractController
             'isFirstTime' => $isFirstTime,
         ]);
     }
+
+    #[Route('/api/auth/delete', name: 'delete_account', methods: ['GET'])]
+    public function delete(
+        EntityManagerInterface $em
+    ): Response
+    {
+        /** @var AuthUser $user */
+        $user = $this->getUser();
+
+        $em->remove($user);
+        $em->flush();
+
+        $response = new JsonResponse(null, Response::HTTP_NO_CONTENT);
+        
+        $response->headers->clearCookie('at', '/');
+        $response->headers->clearCookie('rt', '/');
+        
+        return $response;
+    }
 }
